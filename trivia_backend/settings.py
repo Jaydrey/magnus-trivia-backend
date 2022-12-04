@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-_zt49@@2_0d(5(6$t(9ou*3uesib3b^(34!$@(pcx429&)xmom"
+SECRET_KEY = config("SECRET_KEY", cast=str)
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config("DEBUG", cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [config("ALLOWED_HOST_1", cast=str), config("ALLOWED_HOST_2", cast=str)]
 
 
 # Application definition
@@ -37,17 +38,46 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # django support libraries
+    "rest_framework",
+    "corsheaders",
+    # created apps
+    "question.apps.QuestionConfig",
+    "trivia.apps.TriviaConfig",
+    "choices.apps.ChoicesConfig",
+    "authenctication.apps.AuthencticationConfig",
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    # ----------corsheaders--------------
+    "corsheaders.middleware.CorsMiddleware",
+    # ---------end----------------------
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+# cors settings
+CORS_ALLOW_ALL_ORIGINS=config("CORS_ALLOW_ALL_ORIGINS", cast=bool)
+CORS_ALLOWED_ORIGINS=[
+    config("CORS_ALLOWED_ORIGINS_1", cast=str),
+    config("CORS_ALLOWED_ORIGINS_2", cast=str),
+    config("CORS_ALLOWED_ORIGINS_3", cast=str),
+    config("CORS_ALLOWED_ORIGINS_4", cast=str),
+]
+CORS_ALLOW_CREDENTIALS=config("CORS_ALLOW_CREDENTIALS", cast=bool)
+CSRF_TRUSTED_ORIGINS=[
+    config("CORS_ALLOWED_ORIGINS_1", cast=str),
+    config("CORS_ALLOWED_ORIGINS_2", cast=str),
+    config("CORS_ALLOWED_ORIGINS_3", cast=str),
+    config("CORS_ALLOWED_ORIGINS_4", cast=str),
+]
+
+
 
 ROOT_URLCONF = "trivia_backend.urls"
 
@@ -75,8 +105,12 @@ WSGI_APPLICATION = "trivia_backend.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        'ENGINE': config("POSTGRES_DB_ENGINE"),
+        'NAME': config("POSTGRES_DB_NAME", cast=str),
+        'USER': config("POSTGRES_USER", cast=str),
+        'PASSWORD': config("POSTGRES_PASSWORD", cast=str),
+        'HOST': config("POSTGRES_HOST", cast=str),
+        'PORT': config("POSTGRES_PORT", cast=str),
     }
 }
 
@@ -92,6 +126,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",},
 ]
+
+# AUTH USER MODEL
+AUTH_USER_MODEL="authenctication.TriviaUser"
 
 
 # Internationalization
