@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "trivia.apps.TriviaConfig",
     "choices.apps.ChoicesConfig",
     "authenctication.apps.AuthencticationConfig",
+    "trivia_user.apps.TriviaUserConfig",
 ]
 
 MIDDLEWARE = [
@@ -128,7 +129,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 # AUTH USER MODEL
-AUTH_USER_MODEL="authenctication.TriviaUser"
+AUTH_USER_MODEL="authenctication.User"
 
 
 # Internationalization

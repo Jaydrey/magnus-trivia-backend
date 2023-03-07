@@ -1,9 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.base_user import BaseUserManager
-from django.utils.translation import gettext_lazy as text_lazy
 
-from trivia.models import TriviaGroup
 
 # Create your models here.
 
@@ -36,27 +34,15 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email=email,password=password, **kwargs)
 
 # Create your models here.
-class TriviaUser(AbstractUser):
-    class UserType(models.TextChoices):
-        HOST = "Host", text_lazy("Host")
-        PARTICIPANT = "Participant", text_lazy("Participant")
-
+class User(AbstractUser):
     email = models.EmailField(max_length=100, unique=True)
-    phone_number = models.CharField(max_length=15)
-    user_type = models.CharField(
-        max_length=20,
-        choices = UserType.choices,
-        default=UserType.PARTICIPANT
-    )
     username=models.CharField(max_length=50)
-    trivia_id = models.ForeignKey(TriviaGroup, on_delete=models.CASCADE, null=True)
     pic_avatar = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
-
     objects=CustomUserManager()
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
-
+    REQUIRED_FIELDS = ["username",]
 
     def __str__(self):
+        
         return self.username
 
